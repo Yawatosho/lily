@@ -7,7 +7,7 @@
     <title>ひよっこ司書の本棚レスキューミッション</title>
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="apple-touch-icon" href="./assets/app-icon-192.png" />
-    <link rel="stylesheet" href="./styles.css?v=41" />
+    <link rel="stylesheet" href="./styles.css?v=55" />
   </head>
   <body>
     <main class="app-shell" aria-live="polite">
@@ -26,6 +26,12 @@
           <div class="title-lily-mask" aria-hidden="true">
             <img src="./assets/title_lily.png" alt="" class="title-lily" />
           </div>
+          <button
+            class="lily-secret-button"
+            type="button"
+            data-open-gallery
+            aria-label="ギャラリーを開く"
+          ></button>
         </div>
 
         <div class="title-actions">
@@ -78,10 +84,7 @@
           <div class="timer-pill" id="sortTimer">0.0秒</div>
         </header>
 
-        <div class="helper-row">
-          <img src="./assets/talking-book.png" alt="" />
-          <p>本をドラッグして好きな場所に差し込みます。</p>
-        </div>
+        <p class="mission-text" id="sortMission">本をドラッグして好きな場所に差し込みます。</p>
         <div class="bookshelf sort-shelf" id="sortShelf" aria-label="整理する本棚"></div>
         <p class="feedback" id="sortFeedback">小さい数字から、同じ数字はAから順番です。</p>
       </section>
@@ -151,6 +154,23 @@
         </div>
       </section>
 
+      <section class="screen game-screen info-screen gallery-screen" id="galleryScreen" aria-labelledby="galleryTitle">
+        <header class="game-header">
+          <button class="icon-button" type="button" data-go-home aria-label="タイトルへ戻る">
+            <span aria-hidden="true">‹</span>
+          </button>
+          <div>
+            <p class="screen-kicker">ひみつ</p>
+            <h2 id="galleryTitle">ギャラリー</h2>
+          </div>
+          <div class="timer-pill header-label" id="galleryCount">0/14</div>
+        </header>
+
+        <div class="gallery-layout">
+          <div class="gallery-grid" id="galleryGrid" aria-label="ギャラリー一覧"></div>
+        </div>
+      </section>
+
       <section class="screen result-screen" id="resultScreen" aria-labelledby="resultTitle">
         <img src="./assets/result-shelf.png" alt="" class="result-art" id="resultArt" />
         <div class="result-copy">
@@ -165,8 +185,8 @@
               <span aria-hidden="true">↻</span>
               もう一度
             </button>
-            <button class="secondary-action" type="button" data-go-home>
-              <span aria-hidden="true">⌂</span>
+            <button class="secondary-action" type="button" data-go-home aria-label="タイトルへ戻る">
+              <span aria-hidden="true">←</span>
               タイトル
             </button>
           </div>
@@ -178,8 +198,22 @@
           <span id="countdownText">3</span>
         </div>
       </div>
+
+      <div class="gallery-modal" id="galleryModal" role="dialog" aria-modal="true" aria-labelledby="galleryModalTitle" hidden>
+        <button class="gallery-modal-backdrop" type="button" data-close-gallery-modal aria-label="閉じる"></button>
+        <article class="gallery-modal-panel">
+          <button class="icon-button gallery-modal-close" type="button" data-close-gallery-modal aria-label="閉じる">
+            <span aria-hidden="true">×</span>
+          </button>
+          <img src="./assets/story_maigo_a.png" alt="" id="galleryModalImage" />
+          <div class="gallery-modal-caption">
+            <p class="screen-kicker" id="galleryModalGroup">ストーリー</p>
+            <strong id="galleryModalTitle">まいご本レスキュー 1</strong>
+          </div>
+        </article>
+      </div>
     </main>
 
-    <script src="./app.js?v=41" defer></script>
+    <script src="./app.js?v=55" defer></script>
   </body>
 </html>

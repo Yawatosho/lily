@@ -21,6 +21,8 @@ const COUNTDOWN_SOUNDS = {
   ready: "./sounds/ready.mp3",
   go: "./sounds/go.mp3"
 };
+const BGM_SOURCE = "./sounds/bgm.mp3";
+const STORY_BGM_SOURCE = "./sounds/bgm_story.mp3";
 const GAME_SOUNDS = {
   ok: "./sounds/ok.mp3",
   ng: "./sounds/ng.mp3",
@@ -35,22 +37,28 @@ const MODE_LABELS = {
   find: "まいご本レスキュー",
   sort: "バラバラ本棚レスキュー"
 };
+const GALLERY_UNLOCKS_KEY = "lily-bookshelf-rescue-gallery-unlocks-v1";
 const countdownAudio = {};
 const gameAudio = {};
+let bgmAudio = null;
+let storyBgmAudio = null;
 
 const STORY_DATA = {
   find: {
     label: MODE_LABELS.find,
     slides: [
       {
+        galleryId: "story_maigo_a",
         image: `./assets/story_maigo_a.png?${STORY_ASSET_VERSION}`,
         text: "ひよっこ司書のリリーは、今日も元気に図書館の本棚を整理していました。\n「よし！ もうちょっとで終わり！」と張り切っていたそのとき\n—— 「ここじゃないよ〜。誰か気づいてくれないかな？」 「えっ？」\nリリーは思わず本を抱えたままキョロキョロ。"
       },
       {
+        galleryId: "story_maigo_b",
         image: `./assets/story_maigo_b.png?${STORY_ASSET_VERSION}`,
         text: "誰もいない静かな図書館。でも、確かにどこかから声が……。\n「ねえ、ぼくの位置はここじゃないの。元の場所に戻してほしいなあ！」\n「ええっ！？ しゃ、しゃべる本！？ そんなのアリ！？ で、でも……たしかに、本が間違った場所にあったら困っちゃうもんね！」"
       },
       {
+        galleryId: "story_maigo_c",
         image: `./assets/story_maigo_c.png?${STORY_ASSET_VERSION}`,
         text: "どうやら1冊の本が、間違った場所に紛れ込んでしまったみたい。でも、それがどこにあるのかはわかりません。\n「よーし！ こうなったら、ぜーったい見つけてあげる！ まかせて！」\n請求記号を頼りに、迷子の本を見つけ出し、正しい本棚へ戻してあげましょう！"
       }
@@ -60,20 +68,40 @@ const STORY_DATA = {
     label: MODE_LABELS.sort,
     slides: [
       {
+        galleryId: "story_seiri_a",
         image: `./assets/story_seiri_a.png?${STORY_ASSET_VERSION}`,
         text: "迷子の本を元の場所に戻したリリーが、ほっと息をついたそのとき。\nガタガタガタッ！\n「えっ、なに！？」\n見ると、本棚の本たちが、あちこち入れかわって、バラバラの順番に並んでいました。"
       },
       {
+        galleryId: "story_seiri_b",
         image: `./assets/story_seiri_b.png?${STORY_ASSET_VERSION}`,
         text: "「ぼく、この場所じゃないよ〜」\n「わたし、同じ仲間の本のそばに戻りたいな」\n「順番がちがうと、読みに来た人が見つけられないよ！」\nリリーは本の背中をじっと見つめました。"
       },
       {
+        galleryId: "story_seiri_c",
         image: `./assets/story_seiri_c.png?${STORY_ASSET_VERSION}`,
         text: "「だいじょうぶ！　ちゃんとみんな元の場所に戻してあげるからね！」\nさあ、バラバラになった本たちをよく見て、正しい順番へ戻してあげましょう！"
       }
     ]
   }
 };
+
+const GALLERY_ITEMS = [
+  { id: "story_maigo_a", group: "ストーリー", title: "まいご本レスキュー 1", image: `./assets/story_maigo_a.png?${STORY_ASSET_VERSION}` },
+  { id: "story_maigo_b", group: "ストーリー", title: "まいご本レスキュー 2", image: `./assets/story_maigo_b.png?${STORY_ASSET_VERSION}` },
+  { id: "story_maigo_c", group: "ストーリー", title: "まいご本レスキュー 3", image: `./assets/story_maigo_c.png?${STORY_ASSET_VERSION}` },
+  { id: "story_seiri_a", group: "ストーリー", title: "バラバラ本棚レスキュー 1", image: `./assets/story_seiri_a.png?${STORY_ASSET_VERSION}` },
+  { id: "story_seiri_b", group: "ストーリー", title: "バラバラ本棚レスキュー 2", image: `./assets/story_seiri_b.png?${STORY_ASSET_VERSION}` },
+  { id: "story_seiri_c", group: "ストーリー", title: "バラバラ本棚レスキュー 3", image: `./assets/story_seiri_c.png?${STORY_ASSET_VERSION}` },
+  { id: "result_maigo_s", group: "結果", title: "まいご本レスキュー S", image: `./assets/result_maigo_s.png?${RESULT_ASSET_VERSION}` },
+  { id: "result_maigo_a", group: "結果", title: "まいご本レスキュー A", image: `./assets/result_maigo_a.png?${RESULT_ASSET_VERSION}` },
+  { id: "result_maigo_b", group: "結果", title: "まいご本レスキュー B", image: `./assets/result_maigo_b.png?${RESULT_ASSET_VERSION}` },
+  { id: "result_maigo_c", group: "結果", title: "まいご本レスキュー C", image: `./assets/result_maigo_c.png?${RESULT_ASSET_VERSION}` },
+  { id: "result_seiri_s", group: "結果", title: "バラバラ本棚レスキュー S", image: `./assets/result_seiri_s.png?${RESULT_ASSET_VERSION}` },
+  { id: "result_seiri_a", group: "結果", title: "バラバラ本棚レスキュー A", image: `./assets/result_seiri_a.png?${RESULT_ASSET_VERSION}` },
+  { id: "result_seiri_b", group: "結果", title: "バラバラ本棚レスキュー B", image: `./assets/result_seiri_b.png?${RESULT_ASSET_VERSION}` },
+  { id: "result_seiri_c", group: "結果", title: "バラバラ本棚レスキュー C", image: `./assets/result_seiri_c.png?${RESULT_ASSET_VERSION}` }
+];
 
 const ROUND_LIBRARY = [
   {
@@ -168,6 +196,32 @@ function saveRecord(mode, totalMs) {
     .sort((a, b) => a.ms - b.ms)
     .slice(0, RECORD_LIMIT);
   writeRecords(records);
+}
+
+function readGalleryUnlocks() {
+  try {
+    const values = JSON.parse(localStorage.getItem(GALLERY_UNLOCKS_KEY) || "[]");
+    if (!Array.isArray(values)) return new Set();
+    return new Set(values.filter((id) => GALLERY_ITEMS.some((item) => item.id === id)));
+  } catch {
+    return new Set();
+  }
+}
+
+function writeGalleryUnlocks(unlocks) {
+  try {
+    localStorage.setItem(GALLERY_UNLOCKS_KEY, JSON.stringify([...unlocks]));
+  } catch {
+    // Gallery progress is a bonus; the game should keep working without storage.
+  }
+}
+
+function unlockGalleryItem(id) {
+  if (!id) return;
+  const unlocks = readGalleryUnlocks();
+  if (unlocks.has(id)) return;
+  unlocks.add(id);
+  writeGalleryUnlocks(unlocks);
 }
 
 function formatRecordDate(isoText) {
@@ -272,6 +326,72 @@ function playGameSound(name) {
   }
 }
 
+function getBgmAudio() {
+  if (typeof Audio === "undefined") return null;
+  if (!bgmAudio) {
+    bgmAudio = new Audio(BGM_SOURCE);
+    bgmAudio.loop = true;
+    bgmAudio.preload = "auto";
+    bgmAudio.volume = 0.38;
+  }
+  return bgmAudio;
+}
+
+function playBgm() {
+  const audio = getBgmAudio();
+  if (!audio || !audio.paused) return;
+
+  try {
+    audio.play()?.catch(() => {});
+  } catch {
+    // BGM is optional presentation; gameplay continues if playback is blocked.
+  }
+}
+
+function stopBgm() {
+  if (!bgmAudio) return;
+
+  try {
+    bgmAudio.pause();
+    bgmAudio.currentTime = 0;
+  } catch {
+    // Ignore browsers that cannot seek an unloaded audio file.
+  }
+}
+
+function getStoryBgmAudio() {
+  if (typeof Audio === "undefined") return null;
+  if (!storyBgmAudio) {
+    storyBgmAudio = new Audio(STORY_BGM_SOURCE);
+    storyBgmAudio.loop = true;
+    storyBgmAudio.preload = "auto";
+    storyBgmAudio.volume = 0.34;
+  }
+  return storyBgmAudio;
+}
+
+function playStoryBgm() {
+  const audio = getStoryBgmAudio();
+  if (!audio || !audio.paused) return;
+
+  try {
+    audio.play()?.catch(() => {});
+  } catch {
+    // Story BGM is optional presentation; browsing the story should continue.
+  }
+}
+
+function stopStoryBgm() {
+  if (!storyBgmAudio) return;
+
+  try {
+    storyBgmAudio.pause();
+    storyBgmAudio.currentTime = 0;
+  } catch {
+    // Ignore browsers that cannot seek an unloaded audio file.
+  }
+}
+
 function stopCountdown(options = {}) {
   if (state.countdownId) {
     clearTimeout(state.countdownId);
@@ -340,6 +460,16 @@ function randomLetter() {
   return CALL_LETTERS[randomInt(CALL_LETTERS.length)];
 }
 
+function hasNonZeroDecimal(tenths) {
+  return tenths % 10 !== 0;
+}
+
+function nextNonZeroDecimalTenths(tenths) {
+  let value = tenths;
+  while (!hasNonZeroDecimal(value)) value += 1;
+  return value;
+}
+
 function formatCallNumber(tenths) {
   const whole = Math.floor(tenths / 10);
   const decimal = tenths % 10;
@@ -349,7 +479,8 @@ function formatCallNumber(tenths) {
 function randomUniqueTenths(count, min, max) {
   const values = new Set();
   while (values.size < count) {
-    values.add(min + randomInt(max - min + 1));
+    const value = min + randomInt(max - min + 1);
+    if (hasNonZeroDecimal(value)) values.add(value);
   }
   return [...values].sort((a, b) => a - b);
 }
@@ -374,7 +505,7 @@ function buildCloseFindEntries() {
   const entries = [];
   let tenths = 1000 + randomInt(7300);
   for (let index = 0; index < FIND_BOOK_COUNT; index += 1) {
-    tenths += 1 + randomInt(6);
+    tenths = nextNonZeroDecimalTenths(tenths + 1 + randomInt(6));
     entries.push([formatCallNumber(tenths), randomLetter()]);
   }
   return entries;
@@ -384,7 +515,7 @@ function buildDuplicateFindEntries() {
   const entries = [];
   let tenths = 3500 + randomInt(3000);
   for (let group = 0; group < 8; group += 1) {
-    tenths += 4 + randomInt(8);
+    tenths = nextNonZeroDecimalTenths(tenths + 4 + randomInt(8));
     pickUniqueLetters(3).forEach((letter) => {
       entries.push([formatCallNumber(tenths), letter]);
     });
@@ -398,13 +529,35 @@ function buildFindEntries(pattern) {
   return buildWideFindEntries();
 }
 
-function pickFindMoveIndexes(bookCount, roundIndex) {
+function isSortedBookSequence(books) {
+  return books.every((book, index) => index === 0 || compareBooks(books[index - 1], book) <= 0);
+}
+
+function buildMovedFindBooks(sortedBooks, from, to) {
+  const books = sortedBooks.map((book) => ({ ...book }));
+  const [answer] = books.splice(from, 1);
+  books.splice(to, 0, answer);
+  return books;
+}
+
+function isUnambiguousFindMove(sortedBooks, from, to) {
+  if (Math.abs(from - to) <= 1) return false;
+  const books = buildMovedFindBooks(sortedBooks, from, to);
+  const removableIndexes = books
+    .map((_, index) => index)
+    .filter((index) => isSortedBookSequence(books.filter((_, bookIndex) => bookIndex !== index)));
+  return removableIndexes.length === 1 && removableIndexes[0] === to;
+}
+
+function pickFindMoveIndexes(sortedBooks, roundIndex) {
   const minimumDistance = [4, 3, 2][roundIndex] ?? 2;
+  const bookCount = sortedBooks.length;
   const candidates = [];
 
   for (let from = 0; from < bookCount; from += 1) {
     for (let to = 0; to < bookCount; to += 1) {
       if (from === to || Math.abs(from - to) < minimumDistance) continue;
+      if (!isUnambiguousFindMove(sortedBooks, from, to)) continue;
       candidates.push({ from, to });
     }
   }
@@ -417,10 +570,9 @@ function buildFindRound(roundIndex) {
   const sortedBooks = buildFindEntries(template.pattern)
     .map((book, index) => makeBook(book, index, `find-${roundIndex}`))
     .sort(compareBooks);
-  const books = sortedBooks.map((book) => ({ ...book }));
-  const move = pickFindMoveIndexes(books.length, roundIndex);
-  const [answer] = books.splice(move.from, 1);
-  books.splice(move.to, 0, answer);
+  const move = pickFindMoveIndexes(sortedBooks, roundIndex);
+  const books = buildMovedFindBooks(sortedBooks, move.from, move.to);
+  const answer = books[move.to];
   return {
     ...template,
     answerId: answer.id,
@@ -478,6 +630,7 @@ function startFindMode() {
   stopTimer();
   stopCountdown();
   stopGameSounds();
+  stopStoryBgm();
   state.activeMode = "find";
   state.find = {
     roundIndex: 0,
@@ -509,6 +662,7 @@ function startFindRound(options = {}) {
   const startRoundTimer = () => {
     find.locked = false;
     find.startedAt = performance.now();
+    playBgm();
     startTimer($("#findTimer"), () => find.totalMs + find.penaltyMs + performance.now() - find.startedAt);
   };
 
@@ -577,6 +731,7 @@ function startSortMode() {
   stopTimer();
   stopCountdown();
   stopGameSounds();
+  stopStoryBgm();
   const sorted = buildSortBooks();
   state.activeMode = "sort";
   state.sort = {
@@ -598,6 +753,7 @@ function startSortMode() {
     if (state.activeMode !== "sort" || state.sort !== sort) return;
     sort.locked = false;
     sort.startedAt = performance.now();
+    playBgm();
     startTimer($("#sortTimer"), () => performance.now() - sort.startedAt);
   });
 }
@@ -917,57 +1073,65 @@ function resultProfile(mode, totalMs) {
   if (mode === "find") {
     if (seconds <= 15) {
       return {
+        galleryId: "result_maigo_s",
         image: resultImage("result_maigo_s.png"),
         sound: resultSound("s"),
         message: "すっごーい！ リリーもビックリのスーパー司書さんだね！まいご本たちも大喜び！ 図書館のヒーロー、ここに誕生！"
       };
     }
-    if (seconds <= 30) {
+    if (seconds <= 40) {
       return {
+        galleryId: "result_maigo_a",
         image: resultImage("result_maigo_a.png"),
         sound: resultSound("a"),
         message: "やったね！ まいご本たちも無事におうちへ帰れたよ！こんなに頼れる人がいて、図書館も安心だね♪"
       };
     }
-    if (seconds <= 45) {
+    if (seconds <= 60) {
       return {
+        galleryId: "result_maigo_b",
         image: resultImage("result_maigo_b.png"),
         sound: resultSound("b"),
         message: "お疲れさま！ ちょっと時間はかかったけど、ちゃんと全部見つけられたね！\n迷子の本たちもホッとしてるよ！"
       };
     }
     return {
+      galleryId: "result_maigo_c",
       image: resultImage("result_maigo_c.png"),
       sound: resultSound("c"),
       message: "ふぅ～、なんとか間に合ったね！\nもうちょっと早く見つけられると、まいご本たちももっと嬉しいかも？"
     };
   }
 
-  if (seconds <= 55) {
+  if (seconds <= 50) {
     return {
+      galleryId: "result_seiri_s",
       image: resultImage("result_seiri_s.png"),
       sound: resultSound("s"),
-      message: "すごい集中力！ 本たちが一瞬でぴしっと整列しました。リリーも胸を張って拍手しています！"
+      message: "本棚はあっという間にきれいに整い、本たちもびっくりするほど早く元の場所へ帰れました。\n「すっごーい！　こんなに早く整理できるなんて、図書館のスーパーヒーローだね！」"
     };
   }
-  if (seconds <= 85) {
+  if (seconds <= 70) {
     return {
+      galleryId: "result_seiri_a",
       image: resultImage("result_seiri_a.png"),
       sound: resultSound("a"),
-      message: "やったね！ 数字とアルファベットをよく見て、きれいな本棚に戻せました。"
+      message: "本棚の本たちは、きちんと並んでほっとしたように静かになりました。\n「やったね！　とっても頼れる整理上手さんだよ！」"
     };
   }
-  if (seconds <= 125) {
+  if (seconds <= 90) {
     return {
+      galleryId: "result_seiri_b",
       image: resultImage("result_seiri_b.png"),
       sound: resultSound("b"),
-      message: "お疲れさま！ じっくり見比べて、最後まで本棚を整えられました。次はもっとスムーズにいけそう！"
+      message: "少し時間はかかりましたが、本たちは無事に正しい場所へ戻ることができました。\n「だいじょうぶ、ちゃんと最後までできたね！　本たちも安心しているよ！」"
     };
   }
   return {
+    galleryId: "result_seiri_c",
     image: resultImage("result_seiri_c.png"),
     sound: resultSound("c"),
-    message: "ふぅ、なんとか整いました！ 数字が同じときはアルファベットを見ると、もっと早く並べられます。"
+    message: "本棚の整理は少し大変でしたが、リリーといっしょに最後までがんばりました。\n「おつかれさま！　次はもっとスムーズにできそうだね！」"
   };
 }
 
@@ -976,6 +1140,7 @@ function finishGame(mode, totalMs) {
   stopCountdown();
   saveRecord(mode, totalMs);
   const profile = resultProfile(mode, totalMs);
+  unlockGalleryItem(profile.galleryId);
   state.activeMode = mode;
   $("#resultTitle").textContent = `${MODE_LABELS[mode]} 結果`;
   $("#resultScore").textContent = formatTime(totalMs);
@@ -1022,6 +1187,7 @@ function renderStorySlide() {
   }
 
   const slide = story.slides[state.story.index];
+  unlockGalleryItem(slide.galleryId);
   $("#storyTitle").textContent = story.label;
   $("#storyModeLabel").textContent = story.label;
   $("#storySlideImage").src = slide.image;
@@ -1071,10 +1237,78 @@ function renderRecordList(container, records) {
   });
 }
 
+function renderGallery() {
+  const unlocks = readGalleryUnlocks();
+  const unlockedCount = GALLERY_ITEMS.filter((item) => unlocks.has(item.id)).length;
+
+  $("#galleryCount").textContent = `${unlockedCount}/${GALLERY_ITEMS.length}`;
+
+  const grid = $("#galleryGrid");
+  grid.innerHTML = "";
+  GALLERY_ITEMS.forEach((item, index) => {
+    const unlocked = unlocks.has(item.id);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `gallery-thumb ${unlocked ? "is-unlocked" : "is-locked"}`;
+    button.setAttribute("aria-label", unlocked ? item.title : "未解放");
+    button.disabled = !unlocked;
+    if (unlocked) {
+      button.addEventListener("click", () => openGalleryModal(item.id));
+    }
+
+    if (unlocked) {
+      const image = document.createElement("img");
+      image.src = item.image;
+      image.alt = "";
+      const badge = document.createElement("span");
+      badge.className = "gallery-thumb-badge";
+      badge.textContent = `${index + 1}`;
+      button.append(image, badge);
+    } else {
+      const mark = document.createElement("span");
+      mark.className = "gallery-thumb-lock";
+      mark.textContent = "?";
+      button.appendChild(mark);
+    }
+    grid.appendChild(button);
+  });
+}
+
+function openGalleryModal(id) {
+  const unlocks = readGalleryUnlocks();
+  const item = GALLERY_ITEMS.find((galleryItem) => galleryItem.id === id);
+  if (!item || !unlocks.has(id)) return;
+
+  const image = $("#galleryModalImage");
+  image.src = item.image;
+  image.alt = item.title;
+  $("#galleryModalGroup").textContent = item.group;
+  $("#galleryModalTitle").textContent = item.title;
+  $("#galleryModal").hidden = false;
+}
+
+function closeGalleryModal() {
+  $("#galleryModal").hidden = true;
+}
+
+function openGalleryScreen() {
+  stopTimer();
+  stopCountdown();
+  stopGameSounds();
+  stopBgm();
+  stopStoryBgm();
+  closeGalleryModal();
+  renderGallery();
+  showScreen("galleryScreen");
+}
+
 function openRecordsScreen() {
   stopTimer();
   stopCountdown();
   stopGameSounds();
+  stopBgm();
+  stopStoryBgm();
+  closeGalleryModal();
   const records = readRecords();
   renderRecordList($("#findRecords"), records.find);
   renderRecordList($("#sortRecords"), records.sort);
@@ -1085,14 +1319,20 @@ function openStoryScreen() {
   stopTimer();
   stopCountdown();
   stopGameSounds();
+  stopBgm();
+  closeGalleryModal();
   showStoryChoice();
   showScreen("storyScreen");
+  playStoryBgm();
 }
 
 function goHome() {
   stopTimer();
   stopCountdown();
   stopGameSounds();
+  stopBgm();
+  stopStoryBgm();
+  closeGalleryModal();
   state.find = null;
   state.sort = null;
   state.story = null;
@@ -1124,6 +1364,13 @@ function bindUI() {
 
   $("[data-open-story]").addEventListener("click", openStoryScreen);
   $("[data-open-records]").addEventListener("click", openRecordsScreen);
+  $("[data-open-gallery]").addEventListener("click", openGalleryScreen);
+  $$("[data-close-gallery-modal]").forEach((button) => {
+    button.addEventListener("click", closeGalleryModal);
+  });
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !$("#galleryModal").hidden) closeGalleryModal();
+  });
 
   $$("[data-story-mode]").forEach((button) => {
     button.addEventListener("click", () => openStoryMode(button.dataset.storyMode));

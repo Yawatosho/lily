@@ -56,6 +56,7 @@ button {
 .app-shell {
   position: relative;
   width: min(100%, 430px);
+  height: 100dvh;
   min-height: 100dvh;
   margin: 0 auto;
   overflow-x: hidden;
@@ -78,6 +79,9 @@ button {
 
 .title-screen {
   position: relative;
+  --lily-height: clamp(800px, 144dvh, 1080px);
+  --lily-right: clamp(-170px, -34vw, -92px);
+  --lily-top: clamp(190px, 33dvh, 264px);
   overflow: hidden;
   min-height: 100dvh;
   background:
@@ -164,10 +168,10 @@ button {
 
 .title-lily {
   position: absolute;
-  top: clamp(190px, 33dvh, 264px);
-  right: clamp(-170px, -34vw, -92px);
+  top: var(--lily-top);
+  right: var(--lily-right);
   width: auto;
-  height: clamp(800px, 144dvh, 1080px);
+  height: var(--lily-height);
   max-width: none;
   object-fit: contain;
   object-position: top center;
@@ -175,6 +179,25 @@ button {
     drop-shadow(0 18px 20px rgba(34, 18, 15, 0.36))
     drop-shadow(0 2px 0 rgba(255, 240, 180, 0.3));
   transform: none;
+}
+
+.lily-secret-button {
+  position: absolute;
+  top: calc(var(--lily-top) + var(--lily-height) * 0.08);
+  right: calc(var(--lily-right) + var(--lily-height) * 0.172);
+  z-index: 6;
+  width: clamp(96px, calc(var(--lily-height) * 0.16), 176px);
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lily-secret-button:focus-visible {
+  outline: 3px solid rgba(255, 241, 168, 0.86);
+  outline-offset: 3px;
 }
 
 .series-name,
@@ -719,6 +742,10 @@ h2 {
   touch-action: none;
 }
 
+#findShelf .book {
+  touch-action: pan-y;
+}
+
 .book::before,
 .book::after {
   position: absolute;
@@ -831,10 +858,29 @@ h2 {
   gap: 12px;
 }
 
+#storyScreen {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+#storyScreen .game-header {
+  position: relative;
+  top: auto;
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
 .story-choice,
 .record-board {
   display: grid;
   gap: 12px;
+}
+
+#storyScreen .story-choice {
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
 .story-choice-card,
@@ -850,6 +896,9 @@ h2 {
 }
 
 .story-choice-card {
+  display: grid;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
   padding: 0;
   text-align: left;
 }
@@ -857,6 +906,8 @@ h2 {
 .story-choice-card img {
   display: block;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   aspect-ratio: 21 / 10;
   object-fit: cover;
   object-position: center 34%;
@@ -888,7 +939,14 @@ h2 {
   gap: 10px;
 }
 
+#storyScreen .kamishibai {
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
 .kamishibai-frame {
+  min-height: 0;
   overflow: hidden;
   border: 2px solid rgba(255, 214, 119, 0.5);
   border-radius: 8px;
@@ -901,9 +959,15 @@ h2 {
 .kamishibai-art {
   display: block;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   max-height: 48dvh;
   object-fit: contain;
   object-position: center;
+}
+
+#storyScreen .kamishibai-art {
+  max-height: none;
 }
 
 .kamishibai-panel {
@@ -936,7 +1000,7 @@ h2 {
 }
 
 .kamishibai-text {
-  min-height: 132px;
+  min-height: 0;
   margin: 0;
   color: #5f3a27;
   font-size: 0.9rem;
@@ -1022,6 +1086,189 @@ h2 {
   text-align: center;
 }
 
+.gallery-screen {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.gallery-screen .game-header {
+  position: relative;
+  top: auto;
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+.gallery-layout {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
+  gap: 10px;
+  overflow: visible;
+  padding: 2px 2px calc(18px + env(safe-area-inset-bottom));
+}
+
+.gallery-thumb {
+  position: relative;
+  display: grid;
+  aspect-ratio: 3 / 4;
+  min-height: 132px;
+  overflow: hidden;
+  min-width: 0;
+  border: 2px solid rgba(255, 214, 119, 0.44);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 246, 0.92), rgba(247, 231, 190, 0.78));
+  color: #4a2a1b;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.74),
+    0 8px 16px rgba(31, 18, 18, 0.16);
+}
+
+.gallery-thumb:focus-visible {
+  outline: 3px solid rgba(255, 241, 168, 0.9);
+  outline-offset: 2px;
+}
+
+.gallery-thumb:not(:disabled):active {
+  transform: translateY(1px) scale(0.992);
+}
+
+.gallery-thumb:disabled {
+  cursor: default;
+}
+
+.gallery-thumb.is-unlocked {
+  border-color: rgba(255, 241, 168, 0.9);
+  box-shadow:
+    0 0 0 2px rgba(216, 164, 71, 0.18),
+    0 10px 18px rgba(31, 18, 18, 0.2);
+}
+
+.gallery-thumb img,
+.gallery-thumb-lock {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-thumb img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.gallery-thumb-lock {
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(180deg, rgba(255, 238, 159, 0.18), transparent),
+    linear-gradient(135deg, var(--plum), var(--plum-deep));
+  color: #fff8d8;
+  font-size: clamp(2.4rem, 14vw, 4.4rem);
+  font-weight: 900;
+}
+
+.gallery-thumb-badge {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  min-width: 24px;
+  padding: 3px 5px 4px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 238, 159, 0.28), transparent 46%),
+    linear-gradient(135deg, rgba(63, 49, 80, 0.94), rgba(40, 29, 55, 0.96));
+  color: #fff8d8;
+  font-size: 0.64rem;
+  font-weight: 900;
+  text-align: center;
+  box-shadow: 0 5px 10px rgba(31, 18, 18, 0.28);
+}
+
+.gallery-modal[hidden] {
+  display: none;
+}
+
+.gallery-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom));
+}
+
+.gallery-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(255, 230, 154, 0.18), transparent 15rem),
+    rgba(35, 20, 25, 0.74);
+  backdrop-filter: blur(4px);
+}
+
+.gallery-modal-panel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(100%, 390px);
+  max-height: 100%;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 2px solid rgba(255, 214, 119, 0.58);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 246, 0.96), rgba(247, 231, 190, 0.9));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.76),
+    0 28px 54px rgba(16, 10, 14, 0.46);
+}
+
+.gallery-modal-panel img {
+  display: block;
+  justify-self: center;
+  width: 100%;
+  min-height: 0;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: rgba(45, 28, 23, 0.12);
+}
+
+.gallery-modal-close {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+}
+
+.gallery-modal-close span {
+  font-size: 1.65rem;
+  transform: translateY(-1px);
+}
+
+.gallery-modal-caption {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px 11px;
+  border-top: 1px solid rgba(91, 55, 34, 0.14);
+}
+
+.gallery-modal-caption strong {
+  color: #4a2a1b;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
 .drag-ghost {
   position: fixed;
   z-index: 20;
@@ -1052,20 +1299,30 @@ h2 {
 
 .result-screen {
   gap: 12px;
+  height: 100dvh;
+  max-height: 100dvh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
   padding: calc(12px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom));
   background:
     linear-gradient(180deg, rgba(255, 247, 221, 0.28), rgba(48, 30, 28, 0.26)),
     url("./assets/ui-library-backdrop.png") center / cover no-repeat;
 }
 
+.result-screen.is-active {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
 .result-art {
   display: block;
-  align-self: center;
-  width: min(100%, 390px);
-  max-height: min(68dvh, 560px);
-  height: auto;
+  align-self: stretch;
+  justify-self: center;
+  width: auto;
+  max-width: min(100%, 390px);
+  height: 100%;
+  min-height: 0;
+  max-height: none;
   border-radius: 8px;
   background: rgba(255, 248, 226, 0.18);
   object-fit: contain;
@@ -1192,6 +1449,12 @@ h2 {
 }
 
 @media (max-height: 600px) {
+  .title-screen {
+    --lily-height: clamp(760px, 144dvh, 850px);
+    --lily-right: clamp(-152px, -36vw, -96px);
+    --lily-top: clamp(184px, 33dvh, 206px);
+  }
+
   .title-hero {
     min-height: inherit;
   }
@@ -1202,12 +1465,6 @@ h2 {
 
   .title-logo {
     width: min(100%, 340px);
-  }
-
-  .title-lily {
-    top: clamp(184px, 33dvh, 206px);
-    right: clamp(-152px, -36vw, -96px);
-    height: clamp(760px, 144dvh, 850px);
   }
 
   h1 {
@@ -1240,6 +1497,129 @@ h2 {
     min-height: 36px;
     padding-block: 8px;
   }
+
+  #storyScreen,
+  .result-screen {
+    gap: 8px;
+    padding: calc(8px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .gallery-screen {
+    gap: 8px;
+    padding: calc(8px + env(safe-area-inset-top)) 10px 0;
+  }
+
+  #storyScreen .game-header,
+  .gallery-screen .game-header {
+    grid-template-columns: 38px 1fr 54px;
+    gap: 8px;
+    padding: 6px;
+  }
+
+  #storyScreen .icon-button,
+  .gallery-screen .icon-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  #storyScreen .timer-pill,
+  .gallery-screen .timer-pill {
+    min-width: 54px;
+    padding: 7px 8px;
+    font-size: 0.78rem;
+  }
+
+  #storyScreen .story-choice,
+  #storyScreen .kamishibai {
+    gap: 8px;
+  }
+
+  #storyScreen .story-choice-card strong {
+    padding: 9px 11px 10px;
+    font-size: 0.94rem;
+  }
+
+  #storyScreen .kamishibai-panel {
+    padding: 9px 10px 10px;
+  }
+
+  #storyScreen .story-progress {
+    margin: 5px 0 7px;
+  }
+
+  #storyScreen .kamishibai-text {
+    font-size: 0.82rem;
+    line-height: 1.44;
+  }
+
+  #storyScreen .kamishibai-actions {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  #storyScreen .kamishibai-actions .primary-action,
+  #storyScreen .kamishibai-actions .secondary-action {
+    min-height: 39px;
+    padding: 7px 6px;
+    font-size: 0.86rem;
+  }
+
+  .gallery-layout {
+    gap: 8px;
+  }
+
+  .gallery-grid {
+    gap: 8px;
+  }
+
+  .gallery-thumb {
+    min-height: 116px;
+  }
+
+  .gallery-thumb-badge {
+    right: 4px;
+    bottom: 4px;
+    min-width: 21px;
+    padding: 2px 4px 3px;
+    font-size: 0.58rem;
+  }
+
+  .gallery-modal {
+    padding: calc(10px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .gallery-modal-caption {
+    padding: 8px 10px 9px;
+  }
+
+  .gallery-modal-caption strong {
+    font-size: 0.92rem;
+  }
+
+  .result-copy {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .score-panel {
+    padding: 9px 11px;
+  }
+
+  .score-panel strong {
+    font-size: 1.18rem;
+  }
+
+  .result-message {
+    min-height: 0;
+    font-size: 0.82rem;
+    line-height: 1.42;
+  }
+
+  .result-actions .primary-action,
+  .result-actions .secondary-action {
+    min-height: 42px;
+    padding: 8px 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1259,11 +1639,18 @@ h2 {
   }
 
   .app-shell {
+    height: min(860px, calc(100dvh - 48px));
     min-height: min(860px, calc(100dvh - 48px));
     border-radius: 22px;
   }
 
   .screen {
     min-height: min(860px, calc(100dvh - 48px));
+  }
+
+  #storyScreen,
+  .result-screen {
+    height: min(860px, calc(100dvh - 48px));
+    max-height: min(860px, calc(100dvh - 48px));
   }
 }
