@@ -1432,6 +1432,12 @@ h2 {
   margin-top: 0;
 }
 
+.result-actions .primary-action,
+.result-actions .secondary-action {
+  min-width: 0;
+  white-space: nowrap;
+}
+
 .primary-action,
 .secondary-action {
   display: inline-flex;
@@ -1691,6 +1697,27 @@ h2 {
     width: 20px;
     height: 20px;
     font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .result-actions {
+    gap: 5px;
+  }
+
+  .result-actions .primary-action,
+  .result-actions .secondary-action {
+    gap: 4px;
+    min-height: 40px;
+    padding: 7px 4px;
+    font-size: 0.72rem;
+  }
+
+  .result-actions .x-post-action span {
+    flex: 0 0 auto;
+    width: 17px;
+    height: 17px;
+    font-size: 0.64rem;
   }
 }
 
