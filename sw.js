@@ -1,4 +1,4 @@
-const CACHE_NAME = "lily-bookshelf-rescue-v62";
+const CACHE_NAME = "lily-bookshelf-rescue-v63";
 const CACHE_ASSETS = [
   "./",
   "./index.html",
