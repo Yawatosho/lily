@@ -1,10 +1,13 @@
-const CACHE_NAME = "lily-bookshelf-rescue-v55";
+const CACHE_NAME = "lily-bookshelf-rescue-v60";
 const CACHE_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=55",
-  "./app.js?v=55",
+  "./styles.css?v=60",
+  "./app.js?v=60",
   "./manifest.webmanifest",
+  "./assets/apple-touch-icon.png",
+  "./assets/favicon.ico",
+  "./assets/ogp.png",
   "./assets/logo.png",
   "./assets/title_lily.png",
   "./assets/app-icon-192.png",

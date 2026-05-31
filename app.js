@@ -162,6 +162,27 @@ function formatTime(ms) {
   return `${(ms / 1000).toFixed(1)}秒`;
 }
 
+function formatShareTime(ms) {
+  return (ms / 1000).toFixed(1);
+}
+
+function getShareUrl() {
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.hash = "";
+  return url.toString();
+}
+
+function buildXPostUrl(mode, totalMs, rank) {
+  const text = [
+    "#ひよっこ司書の本棚レスキューミッション",
+    `${MODE_LABELS[mode]} / クリアタイム:${formatShareTime(totalMs)}秒 / ランク：${rank}`,
+    getShareUrl()
+  ].join("\n");
+  const params = new URLSearchParams({ text });
+  return `https://twitter.com/intent/tweet?${params.toString()}`;
+}
+
 function emptyRecords() {
   return { find: [], sort: [] };
 }
@@ -1073,6 +1094,7 @@ function resultProfile(mode, totalMs) {
   if (mode === "find") {
     if (seconds <= 15) {
       return {
+        rank: "S",
         galleryId: "result_maigo_s",
         image: resultImage("result_maigo_s.png"),
         sound: resultSound("s"),
@@ -1081,6 +1103,7 @@ function resultProfile(mode, totalMs) {
     }
     if (seconds <= 40) {
       return {
+        rank: "A",
         galleryId: "result_maigo_a",
         image: resultImage("result_maigo_a.png"),
         sound: resultSound("a"),
@@ -1089,6 +1112,7 @@ function resultProfile(mode, totalMs) {
     }
     if (seconds <= 60) {
       return {
+        rank: "B",
         galleryId: "result_maigo_b",
         image: resultImage("result_maigo_b.png"),
         sound: resultSound("b"),
@@ -1096,6 +1120,7 @@ function resultProfile(mode, totalMs) {
       };
     }
     return {
+      rank: "C",
       galleryId: "result_maigo_c",
       image: resultImage("result_maigo_c.png"),
       sound: resultSound("c"),
@@ -1105,6 +1130,7 @@ function resultProfile(mode, totalMs) {
 
   if (seconds <= 50) {
     return {
+      rank: "S",
       galleryId: "result_seiri_s",
       image: resultImage("result_seiri_s.png"),
       sound: resultSound("s"),
@@ -1113,6 +1139,7 @@ function resultProfile(mode, totalMs) {
   }
   if (seconds <= 70) {
     return {
+      rank: "A",
       galleryId: "result_seiri_a",
       image: resultImage("result_seiri_a.png"),
       sound: resultSound("a"),
@@ -1121,6 +1148,7 @@ function resultProfile(mode, totalMs) {
   }
   if (seconds <= 90) {
     return {
+      rank: "B",
       galleryId: "result_seiri_b",
       image: resultImage("result_seiri_b.png"),
       sound: resultSound("b"),
@@ -1128,6 +1156,7 @@ function resultProfile(mode, totalMs) {
     };
   }
   return {
+    rank: "C",
     galleryId: "result_seiri_c",
     image: resultImage("result_seiri_c.png"),
     sound: resultSound("c"),
@@ -1151,6 +1180,7 @@ function finishGame(mode, totalMs) {
     return nodes;
   }));
   $("#resultArt").src = profile.image;
+  $("#xPostButton").href = buildXPostUrl(mode, totalMs, profile.rank);
   showScreen("resultScreen");
   playGameSound(profile.sound);
 }
