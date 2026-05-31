@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#3f3150" />
+    <title>ひよっこ司書の本棚レスキューミッション</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/app-icon-192.png" />
+    <link rel="stylesheet" href="./styles.css?v=41" />
+  </head>
+  <body>
+    <main class="app-shell" aria-live="polite">
+      <section class="screen title-screen is-active" id="titleScreen" aria-labelledby="gameTitle">
+        <div class="title-hero">
+          <img src="./assets/ui-library-backdrop.png" alt="" class="hero-art" />
+          <div class="hero-copy">
+            <h1 id="gameTitle" class="sr-only">ひよっこ司書の本棚レスキューミッション</h1>
+            <img
+              src="./assets/logo.png"
+              alt=""
+              class="title-logo"
+              aria-hidden="true"
+            />
+          </div>
+          <div class="title-lily-mask" aria-hidden="true">
+            <img src="./assets/title_lily.png" alt="" class="title-lily" />
+          </div>
+        </div>
+
+        <div class="title-actions">
+          <div class="mode-grid" aria-label="モード選択">
+            <button class="mode-card" type="button" data-start-mode="find">
+              <strong>まいご本レスキュー</strong>
+            </button>
+            <button class="mode-card" type="button" data-start-mode="sort">
+              <strong>バラバラ本棚レスキュー</strong>
+            </button>
+          </div>
+          <div class="utility-grid" aria-label="メニュー">
+            <button class="mode-card utility-card" type="button" data-open-story>
+              <strong>ストーリー</strong>
+            </button>
+            <button class="mode-card utility-card" type="button" data-open-records>
+              <strong>記録</strong>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen game-screen" id="findScreen" aria-labelledby="findTitle">
+        <header class="game-header">
+          <button class="icon-button" type="button" data-go-home aria-label="タイトルへ戻る">
+            <span aria-hidden="true">‹</span>
+          </button>
+          <div>
+            <p class="screen-kicker">まいご本レスキュー</p>
+            <h2 id="findTitle">並びが変な本はどれ？</h2>
+          </div>
+          <div class="timer-pill" id="findTimer">0.0秒</div>
+        </header>
+
+        <div class="round-meter" id="findRoundMeter" aria-label="ラウンド"></div>
+        <p class="mission-text" id="findMission">請求記号の順番から外れている本をタップ。</p>
+        <div class="bookshelf" id="findShelf" aria-label="本棚"></div>
+        <p class="feedback" id="findFeedback">数字が同じならアルファベット順です。</p>
+      </section>
+
+      <section class="screen game-screen" id="sortScreen" aria-labelledby="sortTitle">
+        <header class="game-header">
+          <button class="icon-button" type="button" data-go-home aria-label="タイトルへ戻る">
+            <span aria-hidden="true">‹</span>
+          </button>
+          <div>
+            <p class="screen-kicker">バラバラ本棚レスキュー</p>
+            <h2 id="sortTitle">左上から順番に並べよう</h2>
+          </div>
+          <div class="timer-pill" id="sortTimer">0.0秒</div>
+        </header>
+
+        <div class="helper-row">
+          <img src="./assets/talking-book.png" alt="" />
+          <p>本をドラッグして好きな場所に差し込みます。</p>
+        </div>
+        <div class="bookshelf sort-shelf" id="sortShelf" aria-label="整理する本棚"></div>
+        <p class="feedback" id="sortFeedback">小さい数字から、同じ数字はAから順番です。</p>
+      </section>
+
+      <section class="screen game-screen info-screen" id="storyScreen" aria-labelledby="storyTitle">
+        <header class="game-header">
+          <button class="icon-button" type="button" data-go-home aria-label="タイトルへ戻る">
+            <span aria-hidden="true">‹</span>
+          </button>
+          <div>
+            <p class="screen-kicker">ストーリー</p>
+            <h2 id="storyTitle">リリーと本たちの物語</h2>
+          </div>
+          <div class="timer-pill header-label">物語</div>
+        </header>
+
+        <div class="story-choice" id="storyChoice">
+          <button class="story-choice-card" type="button" data-story-mode="find">
+            <img src="./assets/story_maigo_a.png" alt="" />
+            <strong>まいご本レスキュー</strong>
+          </button>
+          <button class="story-choice-card" type="button" data-story-mode="sort">
+            <img src="./assets/story_seiri_a.png" alt="" />
+            <strong>バラバラ本棚レスキュー</strong>
+          </button>
+        </div>
+
+        <article class="kamishibai" id="storyViewer" hidden>
+          <div class="kamishibai-frame">
+            <img src="./assets/story_maigo_a.png" alt="" class="kamishibai-art" id="storySlideImage" />
+          </div>
+          <div class="kamishibai-panel">
+            <p class="screen-kicker" id="storyModeLabel">まいご本レスキュー</p>
+            <div class="story-progress" id="storyProgress" aria-label="ページ"></div>
+            <p class="kamishibai-text" id="storySlideText"></p>
+            <div class="kamishibai-actions">
+              <button class="secondary-action" type="button" id="storySelectButton">選択</button>
+              <button class="secondary-action" type="button" id="storyPrevButton">まえへ</button>
+              <button class="primary-action" type="button" id="storyNextButton">つぎへ</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="screen game-screen info-screen" id="recordsScreen" aria-labelledby="recordsTitle">
+        <header class="game-header">
+          <button class="icon-button" type="button" data-go-home aria-label="タイトルへ戻る">
+            <span aria-hidden="true">‹</span>
+          </button>
+          <div>
+            <p class="screen-kicker">記録</p>
+            <h2 id="recordsTitle">ベスト10</h2>
+          </div>
+          <div class="timer-pill header-label">BEST</div>
+        </header>
+
+        <div class="record-board">
+          <section class="record-panel" aria-labelledby="findRecordsTitle">
+            <h3 id="findRecordsTitle">まいご本レスキュー</h3>
+            <ol class="record-list" id="findRecords"></ol>
+          </section>
+
+          <section class="record-panel" aria-labelledby="sortRecordsTitle">
+            <h3 id="sortRecordsTitle">バラバラ本棚レスキュー</h3>
+            <ol class="record-list" id="sortRecords"></ol>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen result-screen" id="resultScreen" aria-labelledby="resultTitle">
+        <img src="./assets/result-shelf.png" alt="" class="result-art" id="resultArt" />
+        <div class="result-copy">
+          <h2 id="resultTitle" class="sr-only">ミッション結果</h2>
+          <div class="score-panel">
+            <span>スコア</span>
+            <strong id="resultScore">0.0秒</strong>
+          </div>
+          <p id="resultMessage" class="result-message"></p>
+          <div class="result-actions">
+            <button class="primary-action" type="button" id="retryButton">
+              <span aria-hidden="true">↻</span>
+              もう一度
+            </button>
+            <button class="secondary-action" type="button" data-go-home>
+              <span aria-hidden="true">⌂</span>
+              タイトル
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="countdown-overlay" id="countdownOverlay" hidden>
+        <div class="countdown-card" role="status" aria-live="assertive">
+          <span id="countdownText">3</span>
+        </div>
+      </div>
+    </main>
+
+    <script src="./app.js?v=41" defer></script>
+  </body>
+</html>
